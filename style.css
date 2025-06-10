@@ -1,0 +1,84 @@
+body{
+    margin: 0; /*remove a margem padrão que o navegador, deixando os elementos colados a tela*/
+    font-family: 'Segeo UI', sans-serif; /*Define como fonte padrão da pagina Segeo UI, mas se não estiver disponivel usa sans-serif*/
+    background-color: #eae7e7; /*define o fundo da pagina como sendo um off white*/
+    color: black; /*define a cor do texto*/
+}
+
+header{
+    background: linear-gradient(120deg, #710b00, #ff0a0f);
+    color: white;
+    text-align: center;
+    padding: 60px 20px; /*define a área do cabeçalho*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;            
+    text-align: center;
+}
+
+header h1{
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+header button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: white;
+  color: #c90000;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+header button:hover {
+  background: #ecf0f1;
+}
+
+section {
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+section h2 {
+  margin-top: 30px;
+  color: #c90000;
+}
+
+section ul {
+  padding-left: 20px;
+}
+
+section button {
+  margin-top: 30px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+section button:hover {
+  background: #2980b9;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #ddd;
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.homeimg{
+    max-width: 20rem;
+    margin-bottom: 10px;
+}
