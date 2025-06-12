@@ -4,14 +4,14 @@
     <meta charset="UTF-8"> <!-- permite usar acentos como: á, é, ç e etc... -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- torna o site responsivo -->
     <title>Fitlog</title> <!-- titulo da GUIA -->
-    <link rel="stylesheet" href="style.css"> <!-- AINDA no HEAD é importante conectarmos ao arquivo CSS que estiliza a página-->
+    <link rel="stylesheet" href="/static/style.css"> <!-- AINDA no HEAD é importante conectarmos ao arquivo CSS que estiliza a página-->
 </head>
 <body>
     <header> <!-- Dentro do BODY temos elementos semanticos como o header que serve para separar partes do site em "blocos" que podem ser re-utilizados e etc-->
         <h1>Fitlog</h1> <!-- h1 é a tag de título -->
         <p>Registre seus treinos. Acompanhe sua evolução. Progrida com inteligência.</p> <!-- tag <p> de paragrafo, colocamos um bom slogam para nosso site -->
         <button onclick="rolarParaConteudo()">Saiba mais</button>
-        <img src="midia/Fitloghome.png" alt="Fitlog home img" class="homeimg">
+        <img src="/static/img/Fitloghome.png" alt="Fitlog home img" class="homeimg">
     </header>
 
     <section id="conteudo"> <!-- Criei um "bloco" semantico para separar melhor e organizar o codigo e site -->
@@ -30,6 +30,6 @@
         <p>© 2025 Fitlog. Criado como projeto de aprendizado.</p>
     </footer>
 
-<script src="script.js"></script> <!-- Importa no body o arquivo de js-->
+<script src="/static/script.js"></script> <!-- Importa no body o arquivo de js-->
 </body>
 </html>
