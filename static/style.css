@@ -1,20 +1,62 @@
 body{
-    margin: 0; /*remove a margem padrão que o navegador, deixando os elementos colados a tela*/
-    font-family: 'Segeo UI', sans-serif; /*Define como fonte padrão da pagina Segeo UI, mas se não estiver disponivel usa sans-serif*/
-    background-color: #eae7e7; /*define o fundo da pagina como sendo um off white*/
-    color: black; /*define a cor do texto*/
+    margin: 0;
+    font-family: 'Segeo UI', sans-serif;
+    background-color: #eae7e7;
+    color: black;
+}
+
+.topbar {
+  background-color: #710b00;
+  color: white;
+  padding: 10px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo-mini {
+  height: 30px;
+  width: auto;
+  vertical-align: middle;
+}
+
+.topbar-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.top-button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  background: white;
+  color: #710b00;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.top-button:hover {
+  background: #ffe0e0;
 }
 
 header{
     background: linear-gradient(120deg, #710b00, #ff0a0f);
     color: white;
     text-align: center;
-    padding: 60px 20px; /*define a área do cabeçalho*/
+    padding: 60px 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;            
+    justify-content: center;    
     text-align: center;
 }
 
