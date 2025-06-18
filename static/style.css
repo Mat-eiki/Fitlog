@@ -48,6 +48,48 @@ body{
   background: #ffe0e0;
 }
 
+.topbar {
+  background-color: #710b00;
+  color: white;
+  padding: 5px 20px; /* era 10px, agora menor */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo-mini img {
+  height: 40px;
+  width: auto;
+}
+
+.topbar-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.top-button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  background: white;
+  color: #710b00;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.top-button:hover {
+  background: #ffe0e0;
+}
+
 header{
     background: linear-gradient(120deg, #710b00, #ff0a0f);
     color: white;
