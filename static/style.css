@@ -178,22 +178,33 @@ footer {
     margin-top: 20px;      
 }
 
+.top-button {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  background: white;
+  color: #710b00 !important; 
+  border-radius: 5px;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.top-button:hover {
+  background: #ffe0e0;
+}
+
 .cta-button {
-  background-color: #c90000; 
+  background-color: #c90000;  
   color: white !important;   
-  border: none;
-  border-radius: 8px;
   padding: 12px 24px;
+  border-radius: 8px;
   font-size: 1rem;
   font-weight: bold;
-  cursor: pointer;
-  text-decoration: none;    
+  text-decoration: none;      
   transition: background-color 0.3s ease;
 }
 
 .cta-button:hover {
   background-color: #710b00;
-  color: white;
 }
 
 .form-container {

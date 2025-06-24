@@ -16,6 +16,11 @@
     <div class="form-container">
         <form action="/cadastro" method="post">
             <h2>Crie sua Conta</h2>
+
+            % if error:
+            <p style="color: red; text-align: center;">{{error}}</p>
+            % end
+
             <label for="nome">Nome:</label>
             <input type="text" id="nome" name="nome" required>
 
