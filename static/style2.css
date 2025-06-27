@@ -1,0 +1,243 @@
+/* --- Estilos da Página Home Logada --- */
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    /* Adiciona padding para o conteúdo não ficar atrás da topbar fixa */
+    padding-top: 70px; 
+}
+
+.main-content {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.main-content h2 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.topbar.logged-in-topbar {
+    background-color: #c90000;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+    box-sizing: border-box;
+    padding: 10px 20px;
+}
+
+.logged-in-topbar .topbar-content {
+    display: flex;
+    justify-content: space-between; /* Coloca um item no início e outro no fim */
+    align-items: center;
+    max-width: 900px; /* Alinha com o conteúdo principal */
+    margin: 0 auto;   /* Centraliza o conteúdo */
+}
+
+.welcome-text {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+.workout-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.workout-item {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.workout-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer;
+    background-color: #f7f7f7;
+}
+
+.workout-header:hover {
+    background-color: #efefef;
+}
+
+.workout-header h3 {
+    margin: 0;
+    color: #c90000;
+}
+
+.workout-details {
+    padding: 0px 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+}
+
+.workout-item.active .workout-details {
+    padding: 20px 20px;
+    max-height: 500px;
+    transition: max-height 0.5s ease-in, padding 0.5s ease-in;
+}
+
+.exercise-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.exercise-item:last-child {
+    border-bottom: none;
+}
+
+.edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
+.add-workout-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #c90000;
+    color: white;
+    font-size: 36px;
+    line-height: 55px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.add-workout-btn:hover {
+    transform: scale(1.1);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 20;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px 0;
+    box-sizing: border-box;
+}
+
+.modal-content .form-button {
+    width: 100%;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.workout-header {
+    position: relative;
+}
+
+.workout-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Espaço entre os botões */
+}
+
+.edit-workout-btn, .delete-workout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 0;
+}
+
+.expand-arrow {
+    font-size: 1em;
+    color: #888;
+}
+
+/* Formulário de edição que aparece no lugar do título */
+.inline-edit-form {
+    display: none; /* Escondido por padrão */
+    flex-grow: 1; /* Ocupa o espaço do título */
+    margin-right: 10px;
+}
+
+.inline-edit-form input {
+    width: 70%;
+    padding: 5px;
+}
+
+/* Estilos para os botões do modal de confirmação */
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-button.secondary {
+    background-color: #aaa;
+}
+.form-button.secondary:hover {
+    background-color: #888;
+}

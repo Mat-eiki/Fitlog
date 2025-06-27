@@ -4,17 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Fitlog</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/style2.css">
 </head>
-<body class="form-page-body">
-    <main>
-        <div class="form-container">
-            <h1>Olá, {{nome}}!</h1>
-            <p style="text-align: center;">Login realizado com sucesso.</p>
+<body>
+
+    <div class="topbar logged-in-topbar">
+        <div class="topbar-content">
+            <span class="welcome-text">Olá, {{nome}}!</span>
+            <a href="/informacoes">
+                <img src="/static/img/a.avif" alt="Avatar do Usuário" class="avatar">
+            </a>
         </div>
-    </main>
-    <footer>
-        <p>© 2025 Fitlog. Criado como projeto de aprendizado.</p>
-    </footer>
+    </div>
+
+<main class="main-content">
+    <h2>Meus treinos</h2>
+
+    <div class="workout-list">
+        
+        % if not treinos:
+            <p>Você ainda não criou nenhum treino. Clique no botão '+' para começar!</p>
+        % end
+
+        % for treino in treinos:
+        <div class="workout-item">
+            <div class="workout-header">
+
+                <h3 class="workout-title">{{treino.nome}}</h3>
+
+                <form action="/treinos/editar/{{treino.id}}" method="post" class="inline-edit-form">
+                    <input type="text" name="novo_nome_treino" value="{{treino.nome}}" required>
+                    <button type="submit">Salvar</button>
+                </form>
+
+                <div class="workout-controls">
+                    <button class="edit-workout-btn" title="Editar nome do treino">✏️</button>
+                    <button class="delete-workout-btn" data-id="{{treino.id}}" title="Deletar treino">❌</button>
+                    <span class="expand-arrow">&#9660;</span>
+                </div>
+            </div>
+            <div class="workout-details">
+                </div>
+        </div>
+        % end
+
+    </div>
+
+    <button class="add-workout-btn" id="addWorkoutBtn">+</button>
+</main>
+
+<div id="addWorkoutModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3>Criar novo treino</h3>
+        <form action="/treinos/criar" method="post">
+            <input type="text" name="nome_treino" placeholder="Nome do treino (ex: Pernas e Ombros)" required>
+            <button type="submit" class="form-button">Salvar</button>
+        </form>
+    </div>
+</div>
+
+<div id="deleteWorkoutModal" class="modal">
+    <div class="modal-content">
+        <h3>Confirmar Exclusão</h3>
+        <p>Você tem certeza que deseja deletar este treino? Esta ação não pode ser desfeita.</p>
+        <div class="modal-buttons">
+            <button id="cancelDeleteBtn" class="form-button secondary">Cancelar</button>
+            <form id="confirmDeleteForm" action="" method="post" style="display: inline;">
+                <button type="submit" class="form-button">Deletar</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    <script src="/static/script2.js"></script>
 </body>
 </html>

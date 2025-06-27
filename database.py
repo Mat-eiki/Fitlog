@@ -1,31 +1,45 @@
 import sqlite3
 
-# Define o nome do arquivo do banco de dados
 DB_NAME = 'fitlog.db'
 
 def create_tables():
-    """
-    Cria as tabelas necessárias no banco de dados se elas não existirem.
-    """
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    # Cria a tabela de usuários
-    # A estrutura já prevê futuras implementações (peso, altura, etc)
-    # A senha será armazenada como um "hash" seguro, nunca como texto puro.
+    # Tabela de usuários (sem alteração)
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             email TEXT NOT NULL UNIQUE,
-            senha TEXT NOT NULL,
-            peso REAL,
-            altura REAL
+            senha TEXT NOT NULL
         )
     ''')
 
-    print("Tabela 'usuarios' criada com sucesso.")
+    # NOVA TABELA: Treinos
+    # usuario_id é a "chave estrangeira" que liga o treino ao seu dono
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS treinos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            usuario_id INTEGER NOT NULL,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios (id)
+        )
+    ''')
 
+    # NOVA TABELA: Exercícios
+    # treino_id é a "chave estrangeira" que liga o exercício ao seu treino
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS exercicios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            carga TEXT,
+            treino_id INTEGER NOT NULL,
+            FOREIGN KEY (treino_id) REFERENCES treinos (id)
+        )
+    ''')
+
+    print("Tabelas 'usuarios', 'treinos' e 'exercicios' criadas com sucesso.")
     conn.commit()
     conn.close()
 
