@@ -241,3 +241,103 @@ body {
 .form-button.secondary:hover {
     background-color: #888;
 }
+
+.empty-workout-msg {
+    color: #888;
+    text-align: center;
+    margin: 10px 0 20px 0;
+}
+
+.add-exercise-form {
+    display: flex;
+    gap: 10px; /* Espaço entre os campos e o botão */
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #eee; /* Linha separadora */
+}
+
+.add-exercise-form input {
+    flex-grow: 1; /* Faz os campos de input crescerem para ocupar o espaço */
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.add-exercise-form button {
+    padding: 8px 15px;
+    background-color: #28a745; /* Verde para ação de adicionar */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.add-exercise-form button:hover {
+    background-color: #218838;
+}
+
+/* Adiciona "kg" após a carga no item do exercício */
+.exercise-item span:nth-child(2)::after {
+    content: ' kg';
+    color: #888;
+    margin-left: 4px;
+}
+
+.exercise-item {
+    position: relative;
+}
+
+/* Container para os dados do exercício */
+.exercise-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+}
+
+/* Formulário de edição que aparece no lugar dos dados */
+.inline-exercise-edit-form {
+    display: none; /* Escondido por padrão */
+    width: 100%;
+    gap: 10px;
+}
+
+.inline-exercise-edit-form input {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.inline-exercise-edit-form button {
+    padding: 5px 10px;
+    background-color: #007bff; /* Azul para ação de salvar */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.inline-exercise-edit-form button:hover {
+    background-color: #0056b3;
+}
+
+.exercise-display span:first-child {
+    flex-grow: 1; /* Faz o nome do exercício ocupar o espaço disponível */
+}
+
+.exercise-controls {
+    display: flex;
+    gap: 10px; /* Espaço entre o botão de editar e deletar */
+}
+
+.delete-exercise-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 0;
+    line-height: 1; /* Alinha o 'X' melhor */
+}

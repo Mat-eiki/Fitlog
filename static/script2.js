@@ -1,95 +1,85 @@
-// Garante que o código só rode depois que a página carregar completamente
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- LÓGICA DO ACORDEÃO (ABRIR/FECHAR TREINOS) ---
+    // LÓGICA DO ACORDEÃO (ABRIR/FECHAR TREINOS)
     const workoutItems = document.querySelectorAll('.workout-item');
-
     workoutItems.forEach(item => {
         const header = item.querySelector('.workout-header');
-        header.addEventListener('click', () => {
-            // Alterna a classe 'active' no item de treino clicado
-            item.classList.toggle('active');
-        });
+        if (header) {
+            header.addEventListener('click', (e) => {
+                if (!e.target.closest('.workout-controls') && !e.target.closest('.inline-edit-form')) {
+                    item.classList.toggle('active');
+                }
+            });
+        }
     });
 
-
-    // --- LÓGICA DO MODAL (JANELA PARA ADICIONAR TREINO) ---
-    const modal = document.getElementById('addWorkoutModal');
-    const addBtn = document.getElementById('addWorkoutBtn');
-    const closeBtn = document.querySelector('.close-btn');
-
-    // Abre o modal quando o botão '+' é clicado
-    if (addBtn) {
-        addBtn.onclick = function() {
-            modal.style.display = "block";
-        }
+    // LÓGICA DO MODAL (ADICIONAR TREINO)
+    const addWorkoutModal = document.getElementById('addWorkoutModal');
+    const addWorkoutBtn = document.getElementById('addWorkoutBtn');
+    const closeAddBtn = addWorkoutModal ? addWorkoutModal.querySelector('.close-btn') : null;
+    if (addWorkoutBtn) {
+        addWorkoutBtn.onclick = () => { if (addWorkoutModal) addWorkoutModal.style.display = "block"; };
+    }
+    if (closeAddBtn) {
+        closeAddBtn.onclick = () => { if (addWorkoutModal) addWorkoutModal.style.display = "none"; };
     }
 
-    // Fecha o modal quando o 'x' é clicado
-    if (closeBtn) {
-        closeBtn.onclick = function() {
-            modal.style.display = "none";
-        }
-    }
-
-    // Fecha o modal se o usuário clicar fora da caixa do modal
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-});
-
-// Função antiga para o botão 'Saiba Mais' da página de apresentação
-function rolarParaConteudo() {
-  const secao = document.getElementById('conteudo');
-  if(secao) { // Verifica se o elemento existe antes de rolar
-    secao.scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-
-    // ... (código do acordeão e do modal de adicionar treino sem alterações) ...
-
-
-    // --- LÓGICA PARA DELETAR TREINO (ABRIR MODAL DE CONFIRMAÇÃO) ---
+    // LÓGICA DO MODAL DE DELEÇÃO (GENÉRICO)
     const deleteModal = document.getElementById('deleteWorkoutModal');
-    const deleteBtns = document.querySelectorAll('.delete-workout-btn');
     const confirmDeleteForm = document.getElementById('confirmDeleteForm');
     const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-
-    deleteBtns.forEach(btn => {
+    
+    // Para deletar TREINOS
+    document.querySelectorAll('.delete-workout-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede que o acordeão abra/feche ao clicar no X
-            const treinoId = btn.dataset.id; // Pega o ID do data-id
-            // Define a ação do formulário do modal para a URL correta
-            confirmDeleteForm.action = `/treinos/deletar/${treinoId}`;
-            deleteModal.style.display = 'block'; // Mostra o modal
+            e.stopPropagation();
+            const treinoId = btn.dataset.id;
+            if (confirmDeleteForm) confirmDeleteForm.action = `/treinos/deletar/${treinoId}`;
+            if (deleteModal) deleteModal.style.display = 'block';
         });
     });
 
-    // Fecha o modal de deleção se clicar em "Cancelar"
-    if(cancelDeleteBtn) {
-        cancelDeleteBtn.onclick = function() {
-            deleteModal.style.display = 'none';
-        }
-    }
-    
-    const editBtns = document.querySelectorAll('.edit-workout-btn');
-
-    editBtns.forEach(btn => {
+    // Para deletar EXERCÍCIOS
+    document.querySelectorAll('.delete-exercise-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede que o acordeão abra/feche
+            e.stopPropagation();
+            const exercicioId = btn.dataset.id;
+            if (confirmDeleteForm) confirmDeleteForm.action = `/exercicios/deletar/${exercicioId}`;
+            if (deleteModal) deleteModal.style.display = 'block';
+        });
+    });
+
+    if (cancelDeleteBtn) {
+        cancelDeleteBtn.onclick = () => { if (deleteModal) deleteModal.style.display = 'none'; };
+    }
+
+    // LÓGICA PARA EDITAR NOME DO TREINO
+    document.querySelectorAll('.edit-workout-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
             const header = btn.closest('.workout-header');
             const title = header.querySelector('.workout-title');
             const form = header.querySelector('.inline-edit-form');
-            
-            // Alterna a visibilidade: esconde o título e mostra o formulário
-            title.style.display = 'none';
-            form.style.display = 'flex';
+            if(title) title.style.display = 'none';
+            if(form) form.style.display = 'flex';
         });
     });
 
+    // LÓGICA PARA EDITAR EXERCÍCIO
+    document.querySelectorAll('.edit-exercise-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const item = btn.closest('.exercise-item');
+            const displayDiv = item.querySelector('.exercise-display');
+            const editForm = item.querySelector('.inline-exercise-edit-form');
+            if (displayDiv) displayDiv.style.display = 'none';
+            if (editForm) editForm.style.display = 'flex';
+        });
+    });
+
+    // LÓGICA PARA FECHAR MODAIS CLICANDO FORA
+    window.onclick = function(event) {
+        if (event.target == addWorkoutModal) addWorkoutModal.style.display = "none";
+        if (event.target == deleteModal) deleteModal.style.display = "none";
+    }
 });

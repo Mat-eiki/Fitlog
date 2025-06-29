@@ -12,7 +12,7 @@
         <div class="topbar-content">
             <span class="welcome-text">Olá, {{nome}}!</span>
             <a href="/informacoes">
-                <img src="/static/img/a.avif" alt="Avatar do Usuário" class="avatar">
+                <img src="/static/img/a.avif" alt="Avatar do Utilizador" class="avatar">
             </a>
         </div>
     </div>
@@ -21,7 +21,6 @@
     <h2>Meus treinos</h2>
 
     <div class="workout-list">
-        
         % if not treinos:
             <p>Você ainda não criou nenhum treino. Clique no botão '+' para começar!</p>
         % end
@@ -29,25 +28,49 @@
         % for treino in treinos:
         <div class="workout-item">
             <div class="workout-header">
-
                 <h3 class="workout-title">{{treino.nome}}</h3>
-
                 <form action="/treinos/editar/{{treino.id}}" method="post" class="inline-edit-form">
                     <input type="text" name="novo_nome_treino" value="{{treino.nome}}" required>
                     <button type="submit">Salvar</button>
                 </form>
-
                 <div class="workout-controls">
                     <button class="edit-workout-btn" title="Editar nome do treino">✏️</button>
                     <button class="delete-workout-btn" data-id="{{treino.id}}" title="Deletar treino">❌</button>
                     <span class="expand-arrow">&#9660;</span>
                 </div>
             </div>
+
             <div class="workout-details">
+                % for exercicio in treino.exercicios:
+                <div class="exercise-item">
+                    <div class="exercise-display">
+                        <span>{{exercicio.nome}}</span>
+                        <span>{{exercicio.carga}} kg</span>
+                        <div class="exercise-controls">
+                            <button class="edit-exercise-btn" title="Editar exercício">✏️</button>
+                            <button class="delete-exercise-btn" data-id="{{exercicio.id}}" title="Deletar exercício">❌</button>
+                        </div>
+                    </div>
+                    <form action="/exercicios/editar/{{exercicio.id}}" method="post" class="inline-exercise-edit-form">
+                        <input type="text" name="novo_nome_exercicio" value="{{exercicio.nome}}" required>
+                        <input type="number" name="nova_carga_exercicio" value="{{exercicio.carga}}" required>
+                        <button type="submit">Salvar</button>
+                    </form>
                 </div>
+                % end
+                
+                % if not treino.exercicios:
+                    <p class="empty-workout-msg">Nenhum exercício adicionado a este treino ainda.</p>
+                % end
+
+                <form action="/exercicios/criar/{{treino.id}}" method="post" class="add-exercise-form">
+                    <input type="text" name="nome_exercicio" placeholder="Nome do exercício" required>
+                    <input type="number" name="carga_exercicio" placeholder="Carga (kg)" required>
+                    <button type="submit">Adicionar</button>
+                </form>
+            </div>
         </div>
         % end
-
     </div>
 
     <button class="add-workout-btn" id="addWorkoutBtn">+</button>
@@ -67,7 +90,7 @@
 <div id="deleteWorkoutModal" class="modal">
     <div class="modal-content">
         <h3>Confirmar Exclusão</h3>
-        <p>Você tem certeza que deseja deletar este treino? Esta ação não pode ser desfeita.</p>
+        <p>Você tem certeza que deseja eliminar este item? Esta ação não pode ser desfeita.</p>
         <div class="modal-buttons">
             <button id="cancelDeleteBtn" class="form-button secondary">Cancelar</button>
             <form id="confirmDeleteForm" action="" method="post" style="display: inline;">

@@ -1,17 +1,24 @@
 from bottle import route, template, static_file, redirect, request, response
 
+# A linha mais importante a verificar: garante que AMBAS as classes são importadas
+from models.treino import Treino, Exercicio
 from models.usuario import Usuario
-from models.treino import Treino
 
-# Rota para servir arquivos estáticos (CSS, JS, Imagens)
+
+# Rota para servir ficheiros estáticos
 @route('/static/<filepath:path>')
 def server_static(filepath):
-    """
-    Esta rota é responsável por servir todos os arquivos estáticos
-    (CSS, JavaScript, Imagens) da pasta /static.
-    """
     return static_file(filepath, root='./static')
 
+# Rota da página de apresentação
+@route('/')
+def index():
+    s = request.environ.get('beaker.session')
+    if 'user_id' in s:
+        return redirect('/home')
+    return template('views/apresentacao.html')
+
+# Rota de Cadastro
 @route('/cadastro', method=['GET', 'POST'])
 def cadastro_page():
     if request.method == 'POST':
@@ -28,7 +35,7 @@ def cadastro_page():
     
     return template('views/cadastro.html', error=None)
 
-
+# Rota de Login
 @route('/login', method=['GET', 'POST'])
 def login_page():
     if request.method == 'POST':
@@ -48,7 +55,7 @@ def login_page():
 
     return template('views/login.html', error=None)
 
-# ROTA HOME
+# Rota Home (página principal logada)
 @route('/home')
 def home_page():
     s = request.environ.get('beaker.session')
@@ -61,9 +68,9 @@ def home_page():
         return redirect('/login')
 
     treinos_do_usuario = usuario.get_treinos()
-    return template('views/home.html', nome=usuario.nome, treinos=treinos_do_usuario)
+    return template('views/home.tpl', nome=usuario.nome, treinos=treinos_do_usuario)
 
-# ROTA PARA CRIAR TREINOS
+# Rota para CRIAR TREINOS
 @route('/treinos/criar', method='POST')
 def criar_treino():
     s = request.environ.get('beaker.session')
@@ -77,6 +84,54 @@ def criar_treino():
 
     return redirect('/home')
 
+# Rota para CRIAR EXERCÍCIOS
+@route('/exercicios/criar/<treino_id:int>', method='POST')
+def criar_exercicio(treino_id):
+    s = request.environ.get('beaker.session')
+    if 'user_id' not in s:
+        return redirect('/login')
+
+    nome_exercicio = request.forms.get('nome_exercicio')
+    carga_exercicio = request.forms.get('carga_exercicio')
+
+    if nome_exercicio and carga_exercicio:
+        novo_exercicio = Exercicio(
+            nome=nome_exercicio, 
+            carga=carga_exercicio, 
+            treino_id=treino_id
+        )
+        novo_exercicio.save()
+
+    return redirect('/home')
+
+# Rota para EDITAR EXERCÍCIOS
+@route('/exercicios/editar/<exercicio_id:int>', method='POST')
+def editar_exercicio(exercicio_id):
+    s = request.environ.get('beaker.session')
+    if 'user_id' not in s:
+        return redirect('/login')
+
+    novo_nome = request.forms.get('novo_nome_exercicio')
+    nova_carga = request.forms.get('nova_carga_exercicio')
+
+    if novo_nome and nova_carga:
+        # Idealmente, aqui também haveria uma verificação de segurança
+        Exercicio.update(exercicio_id, novo_nome, nova_carga)
+
+    return redirect('/home')
+
+# Rota para DELETAR EXERCÍCIOS
+@route('/exercicios/deletar/<exercicio_id:int>', method='POST')
+def deletar_exercicio(exercicio_id):
+    s = request.environ.get('beaker.session')
+    if 'user_id' not in s:
+        return redirect('/login')
+
+    # Adicionar verificação de segurança aqui seria ideal
+    Exercicio.delete(exercicio_id)
+    return redirect('/home')
+
+# Rota para EDITAR TREINOS
 @route('/treinos/editar/<treino_id:int>', method='POST')
 def editar_treino(treino_id):
     s = request.environ.get('beaker.session')
@@ -89,6 +144,7 @@ def editar_treino(treino_id):
     
     return redirect('/home')
 
+# Rota para DELETAR TREINOS
 @route('/treinos/deletar/<treino_id:int>', method='POST')
 def deletar_treino(treino_id):
     s = request.environ.get('beaker.session')
@@ -98,19 +154,14 @@ def deletar_treino(treino_id):
     Treino.delete(treino_id)
     return redirect('/home')
 
-# Rota de logout
+# Rota de Logout
 @route('/logout')
 def logout():
     s = request.environ.get('beaker.session')
     s.delete()
     return redirect('/login')
 
-# Rota de informações (placebo)
+# Rota de Informações (placebo)
 @route('/informacoes')
 def informacoes_page():
-    return "<h1>Página de Informações do Usuário</h1><p>Em construção...</p>"
-
-
-@route('/')
-def index():
-    return template('views/apresentacao.html')
+    return "<h1>Página de Informações do Utilizador</h1><p>Em construção...</p>"
