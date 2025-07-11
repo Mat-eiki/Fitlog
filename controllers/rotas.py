@@ -1,22 +1,24 @@
-from bottle import route, template, static_file, redirect, request, response
-
-# A linha mais importante a verificar: garante que AMBAS as classes são importadas
+from bottle import route, template, static_file, redirect, request, response, TEMPLATE_PATH
+TEMPLATE_PATH.insert(0, './views/')
 from models.treino import Treino, Exercicio
 from models.usuario import Usuario
 
 
-# Rota para servir ficheiros estáticos
+# --- ROTA ESTÁTICA SIMPLIFICADA ---
 @route('/static/<filepath:path>')
 def server_static(filepath):
-    return static_file(filepath, root='./static')
+    """Serve arquivos estáticos (CSS, JS, imagens) da pasta ./static/"""
+    return static_file(filepath, root='./static/')
 
 # Rota da página de apresentação
 @route('/')
 def index():
-    s = request.environ.get('beaker.session')
-    if 'user_id' in s:
-        return redirect('/home')
-    return template('views/apresentacao.html')
+    return template('apresentacao.html')
+
+# Rota para a página de acesso negado
+@route('/acesso_negado')
+def acesso_negado_page():
+    return template('acesso_negado.html')
 
 # Rota de Cadastro
 @route('/cadastro', method=['GET', 'POST'])
@@ -27,13 +29,13 @@ def cadastro_page():
         senha = request.forms.get('senha')
 
         if Usuario.find_by_email(email):
-            return template('views/cadastro.html', error="Este e-mail já está em uso.")
+            return template('cadastro.html', error="Este e-mail já está em uso.")
 
         novo_usuario = Usuario(nome=nome, email=email, senha=senha)
         novo_usuario.save()
         return redirect('/login')
     
-    return template('views/cadastro.html', error=None)
+    return template('cadastro.html', error=None)
 
 # Rota de Login
 @route('/login', method=['GET', 'POST'])
@@ -51,26 +53,28 @@ def login_page():
             return redirect('/home')
         
         error_msg = "E-mail ou senha inválidos."
-        return template('views/login.html', error=error_msg)
+        return template('login.html', error=error_msg)
 
-    return template('views/login.html', error=None)
+    return template('login.html', error=None)
 
 # Rota Home (página principal logada)
 @route('/home')
 def home_page():
     s = request.environ.get('beaker.session')
     if 'user_id' not in s:
-        return redirect('/login')
+        return redirect('/acesso_negado') # Redirecionamento correto
 
     usuario = Usuario.find_by_id(s['user_id'])
     if not usuario:
         s.delete()
-        return redirect('/login')
+        return redirect('/acesso_negado')
 
     treinos_do_usuario = usuario.get_treinos()
-    return template('views/home.tpl', nome=usuario.nome, treinos=treinos_do_usuario)
+    # Lembre-se que o arquivo é 'home.tpl'
+    return template('home.tpl', nome=usuario.nome, treinos=treinos_do_usuario)
 
-# Rota para CRIAR TREINOS
+# --- ROTAS DE TREINOS E EXERCÍCIOS (sem alterações na lógica) ---
+
 @route('/treinos/criar', method='POST')
 def criar_treino():
     s = request.environ.get('beaker.session')
@@ -84,7 +88,6 @@ def criar_treino():
 
     return redirect('/home')
 
-# Rota para CRIAR EXERCÍCIOS
 @route('/exercicios/criar/<treino_id:int>', method='POST')
 def criar_exercicio(treino_id):
     s = request.environ.get('beaker.session')
@@ -104,7 +107,6 @@ def criar_exercicio(treino_id):
 
     return redirect('/home')
 
-# Rota para EDITAR EXERCÍCIOS
 @route('/exercicios/editar/<exercicio_id:int>', method='POST')
 def editar_exercicio(exercicio_id):
     s = request.environ.get('beaker.session')
@@ -115,23 +117,19 @@ def editar_exercicio(exercicio_id):
     nova_carga = request.forms.get('nova_carga_exercicio')
 
     if novo_nome and nova_carga:
-        # Idealmente, aqui também haveria uma verificação de segurança
         Exercicio.update(exercicio_id, novo_nome, nova_carga)
 
     return redirect('/home')
 
-# Rota para DELETAR EXERCÍCIOS
 @route('/exercicios/deletar/<exercicio_id:int>', method='POST')
 def deletar_exercicio(exercicio_id):
     s = request.environ.get('beaker.session')
     if 'user_id' not in s:
         return redirect('/login')
 
-    # Adicionar verificação de segurança aqui seria ideal
     Exercicio.delete(exercicio_id)
     return redirect('/home')
 
-# Rota para EDITAR TREINOS
 @route('/treinos/editar/<treino_id:int>', method='POST')
 def editar_treino(treino_id):
     s = request.environ.get('beaker.session')
@@ -144,7 +142,6 @@ def editar_treino(treino_id):
     
     return redirect('/home')
 
-# Rota para DELETAR TREINOS
 @route('/treinos/deletar/<treino_id:int>', method='POST')
 def deletar_treino(treino_id):
     s = request.environ.get('beaker.session')
@@ -161,7 +158,75 @@ def logout():
     s.delete()
     return redirect('/login')
 
-# Rota de Informações (placebo)
+# Rota de Informações
 @route('/informacoes')
 def informacoes_page():
-    return "<h1>Página de Informações do Utilizador</h1><p>Em construção...</p>"
+    s = request.environ.get('beaker.session')
+    if 'user_id' not in s:
+        return redirect('/login')
+
+    usuario = Usuario.find_by_id(s['user_id'])
+    
+    # Se o usuário não for encontrado (pode ter sido deletado), redireciona para o login
+    if not usuario:
+        s.delete()
+        return redirect('/login')
+
+    success_msg = request.query.get('success')
+    error_msg = request.query.get('error')
+
+    # A linha mais importante: Garante que 'usuario', 'success' e 'error' 
+    # são sempre enviados para o template.
+    return template('informacoes.html', 
+                    usuario=usuario, 
+                    success=success_msg, 
+                    error=error_msg)
+
+@route('/usuario/atualizar/nome', method='POST')
+def atualizar_nome():
+    s = request.environ.get('beaker.session')
+    if 'user_id' not in s:
+        return redirect('/login')
+    
+    novo_nome = request.forms.get('novo_nome')
+    if novo_nome:
+        Usuario.update_nome(s['user_id'], novo_nome)
+        return redirect('/informacoes?success=Nome alterado com sucesso!')
+    
+    return redirect('/informacoes?error=Ocorreu um erro ao alterar o nome.')
+
+@route('/usuario/atualizar/senha', method='POST')
+def atualizar_senha():
+    s = request.environ.get('beaker.session')
+    if 'user_id' not in s:
+        return redirect('/login')
+
+    senha_antiga = request.forms.get('senha_antiga')
+    nova_senha = request.forms.get('nova_senha')
+    
+    usuario = Usuario.find_by_id(s['user_id'])
+
+    # Verifica se a senha antiga fornecida está correta
+    if not usuario or not usuario.check_password(senha_antiga):
+        return redirect('/informacoes?error=A senha atual está incorreta.')
+
+    # Atualiza para a nova senha
+    usuario.update_senha(nova_senha)
+    return redirect('/informacoes?success=Senha alterada com sucesso!')
+
+@route('/usuario/deletar', method='POST')
+def deletar_conta():
+    s = request.environ.get('beaker.session')
+    user_id = s.get('user_id')
+
+    if not user_id:
+        return redirect('/login')
+
+    # Deleta o usuário e todos os seus dados associados
+    Usuario.delete(user_id)
+
+    # Destrói a sessão para fazer o logout
+    s.delete()
+
+    # Redireciona para a página de apresentação inicial
+    return redirect('/')
