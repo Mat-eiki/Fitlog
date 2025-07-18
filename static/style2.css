@@ -277,13 +277,6 @@ body {
     background-color: #218838;
 }
 
-/* Adiciona "kg" após a carga no item do exercício */
-.exercise-item span:nth-child(2)::after {
-    content: ' kg';
-    color: #888;
-    margin-left: 4px;
-}
-
 .exercise-item {
     position: relative;
 }

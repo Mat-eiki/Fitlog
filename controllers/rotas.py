@@ -70,8 +70,7 @@ def home_page():
         return redirect('/acesso_negado')
 
     treinos_do_usuario = usuario.get_treinos()
-    # Lembre-se que o arquivo é 'home.tpl'
-    return template('home.tpl', nome=usuario.nome, treinos=treinos_do_usuario)
+    return template('home.html', nome=usuario.nome, treinos=treinos_do_usuario)
 
 # --- ROTAS DE TREINOS E EXERCÍCIOS (sem alterações na lógica) ---
 
